@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# create user $WP_USER@'localhost' identified by $WP_PASS;
 export DBROOTPASS="r1234" WP_USER="najib" WP_PASS="1234"
-sed -i 's/127.0.0.1/exec/g' /etc/mysql/mariadb.conf.d/50-server.cnf
+sed -i 's/127.0.0.1/mariadb/g' /etc/mysql/mariadb.conf.d/50-server.cnf
 service mysql start;
 mysql -e \
 	"create database IF NOT EXISTS wordpressdb;

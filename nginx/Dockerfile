@@ -6,7 +6,8 @@ RUN 		rm -rf /etc/nginx/conf.d/* /etc/nginx/sites-enabled/*; \
 			-addext "subjectAltName=DNS:nramadan.42.fr" -newkey rsa:2048 \
 			-keyout /etc/ssl/private/nginx.key \
 			-out /etc/ssl/certs/nginx.crt;
+RUN 		echo "daemon off;" >> /etc/nginx/nginx.conf
 
 COPY 		./nginx.conf /etc/nginx/conf.d/ssl-config.conf
 EXPOSE 		443
-CMD 		service nginx start
+CMD 		["nginx"]

@@ -1,4 +1,4 @@
-FROM 		debian:stable
+FROM 		debian:buster
 RUN			apt update; apt install -y nginx openssl;
 RUN 		rm -rf /etc/nginx/conf.d/* /etc/nginx/sites-enabled/*; \
  			openssl req -x509 -nodes -days 365 \

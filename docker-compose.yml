@@ -1,1 +1,93 @@
-version '3.9'
+version: '3.8'
+
+configs:
+  nginxConf:
+    file: ./nginx/nginx.conf
+  wordpressConf:
+    file: ./wordpress/php-fpm.conf
+  squidConf:
+    file: ./squid/myconf.conf
+
+volumes:
+  WordpressFiles:
+    name: WordpressFiles
+    driver_opts:
+      o: bind
+      device: /home/nramadan/data/WordpressFiles
+      type: none
+  DatabaseCache:
+    name: DatabaseCache 
+    driver_opts:
+      o: bind
+      device: /home/nramadan/data/DatabaseCache
+      type: none
+
+networks:
+  internalNet:
+    name: internalNet
+
+services:
+  nginx:
+    build: ./nginx/
+    image: nginx:mytag
+    configs:
+      - source: nginxConf
+        target: /etc/nginx/conf.d/myconfig.conf
+    ports:
+      - target: 443
+        published: 443
+    container_name: nginx
+    depends_on:
+      - wordpress
+    volumes:
+      - WordpressFiles:/var/www/:ro
+    restart: "on-failure"
+    networks:
+      - internalNet
+
+  wordpress:
+    build: ./wordpress/
+    image: wordpress:mytag
+    configs:
+      - source: wordpressConf
+        target: /etc/php/7.3/fpm/pool.d/www.conf
+    container_name: wordpress
+    volumes:
+      - WordpressFiles:/var/www
+    env_file: .env
+    restart: "on-failure"
+
+    depends_on:
+      - mariadb
+    networks:
+      - internalNet
+
+
+  mariadb:
+    build: ./mariadb/
+    image: mariadb:mytag
+    container_name: mariadb
+    volumes:
+      - DatabaseCache:/var
+    env_file: .env
+    restart: "on-failure"
+    networks:
+      - internalNet
+
+
+  squid:
+    build: ./squid/
+    image: squid:mytag
+    configs:
+      - source: squidConf
+        target: /etc/squid/conf.d/myconfig.conf
+    container_name: squid
+    ports:
+      - target: 3128
+        published: 3128
+    depends_on:
+      - nginx
+    init: true
+    restart: "on-failure"
+    networks:
+      - internalNet

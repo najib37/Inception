@@ -1,7 +1,7 @@
-FROM 		debian:buster
+FROM 		debian:bullseye
 RUN			apt update;
 RUN			apt install -y squid;
-# ADD  		myconf.conf /etc/squid/conf.d/
+ADD  		myconf.conf /etc/squid/conf.d/
 # COPY --chmod=777 script.sh /home/script.sh
 # RUN 		useradd squid -p 1234 && chown squid:squid /var/spool/squid;
 

@@ -1,4 +1,4 @@
-FROM 		debian:buster
+FROM 		debian:bullseye
 RUN			apt update;
 RUN 		apt install -y nginx openssl
 RUN 		rm -rf /etc/nginx/conf.d/* /etc/nginx/sites-enabled/*; \

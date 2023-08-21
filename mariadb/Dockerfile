@@ -1,11 +1,12 @@
-FROM debian:buster
+FROM debian:bullseye
 
 RUN apt update
-SHELL ["bash", "-c"]
 RUN apt install -y mariadb-server;
+RUN apt install -y vim;
+WORKDIR /home/
 
 
-COPY --chmod=755 ./script.sh /home/script.sh
-# RUN service mysql start; mysql -e "source /home/script.sql";
+COPY --chmod=755 ./healthcheck.sh /home/healthcheck.sh
+COPY --chmod=755 ./enterypoint.sh /home/enterypoint.sh
 
-CMD ["./home/script.sh"]
+CMD ["bash", "-c", "./enterypoint.sh"]

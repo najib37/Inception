@@ -50,15 +50,15 @@ services:
     image: wordpress:mytag
     configs:
       - source: wordpressConf
-        target: /etc/php/7.3/fpm/pool.d/www.conf
+        target: /etc/php/7.4/fpm/pool.d/www.conf
     container_name: wordpress
     volumes:
       - WordpressFiles:/var/www
     env_file: .env
-    restart: "on-failure"
-
+    # restart: "on-failure"
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     networks:
       - internalNet
 
@@ -68,12 +68,15 @@ services:
     image: mariadb:mytag
     container_name: mariadb
     volumes:
-      - DatabaseCache:/var
+      - DatabaseCache:/var/lib/mysql
     env_file: .env
     restart: "on-failure"
     networks:
       - internalNet
-
+    healthcheck:
+      test: /bin/bash -c /home/healthcheck.sh
+      interval: 5s
+      retries: 5
 
   squid:
     build: ./squid/

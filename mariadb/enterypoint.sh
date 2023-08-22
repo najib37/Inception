@@ -1,7 +1,6 @@
 
 #!/bin/bash
 
-export DBROOTPASS="r1234" WP_USER="najib" WP_PASS="1234"
 mariadbd-safe --nowatch
 sleep 2
 mysql -e \

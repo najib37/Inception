@@ -38,12 +38,15 @@ services:
         published: 443
     container_name: nginx
     depends_on:
-      - wordpress
+      wordpress:
+        condition: service_healthy
     volumes:
-      - WordpressFiles:/var/www/:ro
+      - WordpressFiles:/var/www/
     restart: "on-failure"
     networks:
       - internalNet
+    command: ["/usr/sbin/nginx"]
+    tty: "true"
 
   wordpress:
     build: ./wordpress/
@@ -55,42 +58,46 @@ services:
     volumes:
       - WordpressFiles:/var/www
     env_file: .env
-    # restart: "on-failure"
+    restart: "on-failure"
     depends_on:
       mariadb:
         condition: service_healthy
     networks:
       - internalNet
+    healthcheck:
+      test: /bin/bash -c /home/healthcheck.sh
+      interval: 10s
+      retries: 5
 
 
   mariadb:
     build: ./mariadb/
     image: mariadb:mytag
     container_name: mariadb
-    volumes:
-      - DatabaseCache:/var/lib/mysql
+    # volumes:
+    #   - DatabaseCache:/var/lib/mysql/wordpressdb
     env_file: .env
     restart: "on-failure"
     networks:
       - internalNet
     healthcheck:
       test: /bin/bash -c /home/healthcheck.sh
-      interval: 5s
+      interval: 10s
       retries: 5
 
-  squid:
-    build: ./squid/
-    image: squid:mytag
-    configs:
-      - source: squidConf
-        target: /etc/squid/conf.d/myconfig.conf
-    container_name: squid
-    ports:
-      - target: 3128
-        published: 3128
-    depends_on:
-      - nginx
-    init: true
-    restart: "on-failure"
-    networks:
-      - internalNet
+  # squid:
+  #   build: ./squid/
+  #   image: squid:mytag
+  #   configs:
+  #     - source: squidConf
+  #       target: /etc/squid/conf.d/myconfig.conf
+  #   container_name: squid
+  #   ports:
+  #     - target: 3128
+  #       published: 3128
+  #   depends_on:
+  #     - nginx
+  #   init: true
+  #   restart: "on-failure"
+  #   networks:
+  #     - internalNet

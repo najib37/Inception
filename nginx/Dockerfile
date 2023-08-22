@@ -1,6 +1,6 @@
 FROM 		debian:bullseye
 RUN			apt update;
-RUN 		apt install -y nginx openssl
+RUN 		apt install -y nginx openssl iproute2
 RUN 		rm -rf /etc/nginx/conf.d/* /etc/nginx/sites-enabled/*; \
  			openssl req -x509 -nodes -days 365 \
 			-subj "/C=CA/ST=QC/O=najibLLC, Inc./CN=nramadan.42.fr" \
@@ -10,4 +10,4 @@ RUN 		rm -rf /etc/nginx/conf.d/* /etc/nginx/sites-enabled/*; \
 RUN 		echo "daemon off;" >> /etc/nginx/nginx.conf
 
 EXPOSE 		443
-CMD 		["nginx"]
+# CMD 		["/usr/sbin/nginx -g "daemon off;"]

@@ -6,10 +6,12 @@ RUN			export tar=$(ls); tar -xf $tar; rm -rf $tar
 
 FROM		debian:bullseye
 RUN         apt update;
-WORKDIR		/var/www/wordpress/
 RUN			apt install -y php php-fpm php-mysql mariadb-client
+
 COPY		--from=base --chown=www-data /var/www/ /var/www/
 COPY		--from=base --chmod=755 /home/wp /bin/wp
 COPY		--chmod=755 ./healthcheck.sh /home/healthcheck.sh
 COPY		--chmod=755 ./wp-setup.sh /home/wp-setup.sh
+WORKDIR		/var/www/wordpress/
+
 CMD			["bash", "/home/wp-setup.sh"]

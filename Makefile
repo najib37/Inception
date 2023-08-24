@@ -1,18 +1,9 @@
 
 all:
-	docker compose up
+	docker compose up --build
 clean:
-	docker compose rm -fsv
-	docker image prune -f
-	docker volume rm DatabaseCache
-	docker volume rm WordpressFiles
+	docker compose down --rmi all -v
 	rm -rf /home/nramadan/data/DatabaseCache/*
 	rm -rf /home/nramadan/data/WordpressFiles/*
-fclean:
-	docker compose rm -fsv
-	docker volume rm DatabaseCache
-	docker volume rm WordpressFiles
-	rm -rf /home/nramadan/data/DatabaseCache/*
-	rm -rf /home/nramadan/data/WordpressFiles/*
+fclean: clean
 	docker system prune -af
-

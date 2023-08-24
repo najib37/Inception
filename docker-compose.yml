@@ -74,8 +74,8 @@ services:
     build: ./mariadb/
     image: mariadb:mytag
     container_name: mariadb
-    # volumes:
-    #   - DatabaseCache:/var/lib/mysql/wordpressdb
+    volumes:
+      - DatabaseCache:/var/lib/mysql/wordpressdb
     env_file: .env
     restart: "on-failure"
     networks:
@@ -85,19 +85,19 @@ services:
       interval: 10s
       retries: 5
 
-  # squid:
-  #   build: ./squid/
-  #   image: squid:mytag
-  #   configs:
-  #     - source: squidConf
-  #       target: /etc/squid/conf.d/myconfig.conf
-  #   container_name: squid
-  #   ports:
-  #     - target: 3128
-  #       published: 3128
-  #   depends_on:
-  #     - nginx
-  #   init: true
-  #   restart: "on-failure"
-  #   networks:
-  #     - internalNet
+  squid:
+    build: ./squid/
+    image: squid:mytag
+    configs:
+      - source: squidConf
+        target: /etc/squid/conf.d/myconfig.conf
+    container_name: squid
+    ports:
+      - target: 3128
+        published: 3128
+    depends_on:
+      - nginx
+    init: true
+    restart: "on-failure"
+    networks:
+      - internalNet

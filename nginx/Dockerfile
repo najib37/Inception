@@ -1,6 +1,6 @@
 FROM 		debian:bullseye
 RUN			apt update;
-RUN 		apt install -y nginx openssl iproute2
+RUN 		apt install -y nginx openssl
 RUN 		rm -rf /etc/nginx/conf.d/* /etc/nginx/sites-enabled/*; \
  			openssl req -x509 -nodes -days 365 \
 			-subj "/C=CA/ST=QC/O=najibLLC, Inc./CN=nramadan.42.fr" \

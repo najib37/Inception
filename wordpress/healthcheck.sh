@@ -1,4 +1,4 @@
 
 #!/bin/bash
 
-mariadb-admin -unajib -p"1234" -hmariadb ping
+mariadb-admin -u$WP_USER -p$WP_PASS -hmariadb ping

@@ -75,7 +75,7 @@ services:
     image: mariadb:mytag
     container_name: mariadb
     volumes:
-      - DatabaseCache:/var/lib/mysql/wordpressdb
+      - DatabaseCache:/var/lib/mysql/
     env_file: .env
     restart: "on-failure"
     networks:
